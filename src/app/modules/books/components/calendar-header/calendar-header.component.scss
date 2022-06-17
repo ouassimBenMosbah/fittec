@@ -1,0 +1,25 @@
+.flex {
+  display: flex;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.center-vertically {
+  justify-content: center;
+}
+
+.padding-left-sm {
+  padding-left: 32px;
+}
+
+.padding-left-md {
+  padding-left: 64px;
+}
+
+.margin-right-children {
+  button:not(:last-child) {
+    margin-right: 8px;
+  }
+}

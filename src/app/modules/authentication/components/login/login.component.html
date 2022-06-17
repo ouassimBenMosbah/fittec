@@ -1,0 +1,19 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Téléphone</mat-label>
+    <input matInput formControlName="phone" type="text" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Mot de passe</mat-label>
+    <input matInput formControlName="password" type="password" />
+  </mat-form-field>
+</form>
+
+<button
+  mat-flat-button
+  color="primary"
+  (click)="submit()"
+  [disabled]="form.invalid"
+>
+  Connexion
+</button>

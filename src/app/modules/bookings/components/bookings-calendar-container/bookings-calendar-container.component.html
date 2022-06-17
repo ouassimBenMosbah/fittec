@@ -1,0 +1,41 @@
+<app-bookings-calendar-header
+  class="bookings-calendar-header"
+  [(view)]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="fetchEvents()"
+  (viewChange)="fetchEvents()"
+>
+</app-bookings-calendar-header>
+
+<ng-template #loading>
+  <div class="text-center">Récupération des réservations...</div>
+</ng-template>
+
+<div *ngIf="events$ | async; else loading; let events">
+  <mwl-calendar-month-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [activeDayIsOpen]="activeDayIsOpen"
+    [cellTemplate]="customCellTemplate"
+    [weekStartsOn]="weekStartsOn"
+    (dayClicked)="dayClicked($event.day)"
+  >
+  </mwl-calendar-month-view>
+</div>
+
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+  <div class="cal-cell-top">
+    <span *ngIf="day.badgeTotal > 0" class="cal-day-badge">
+      {{ day.badgeTotal }}
+    </span>
+    <span class="cal-day-number">
+      {{ day.date | calendarDate: 'monthViewDayNumber':locale }}
+    </span>
+  </div>
+  <span
+    *ngIf="day.badgeTotal > 0"
+    [innerHTML]="day.events | displayEvents"
+    style="margin: 5px; font-weight: 500"
+  >
+  </span>
+</ng-template>

@@ -1,0 +1,11 @@
+<ng-container
+  *ngIf="isLoggedIn; then loggedInTemplate; else loggedOutTemplate"
+></ng-container>
+
+<ng-template #loggedInTemplate>
+  <app-logout (logout)="onLogout()"></app-logout>
+</ng-template>
+
+<ng-template #loggedOutTemplate>
+  <app-login (login)="onLogin()"></app-login>
+</ng-template>

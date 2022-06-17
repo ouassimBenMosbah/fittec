@@ -1,0 +1,7 @@
+import { LoginData } from '../../@types/interfaces/login-data.interface';
+
+export const getTokenMock: LoginData = {
+  token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfZnJhbmNoaXNlIjoiMGM1ODVlYTQtOWYzMy00MDEzLThkZTktYzk4NGYzMGI1MWY4Iiwiand0X3N0dWRpbyI6IjIyNmI0NGJhLTM0NDktNDcxMy1iY2ZmLWY2MjIzOGQ3OWM5OCIsImp3dF90ZXJtaW5hbCI6ImYyYTZhYjE5LWQwMDgtNGRhMi1hNzBhLTlhYmU2MTNkYzI3YiIsImp3dF9tZW1iZXIiOiIyNTgyMzVlYy00ZmUzLTRhYjktOThjZC1jNjllZWVjZjcwMGQiLCJqd3RfdHlwZSI6Im0iLCJhdXRoIjpbIlBVQkxJQyIsIkFVVEgiXSwic3ViIjoiYXBpIiwiZXhwIjoxNjU1NTUyODY3LCJpYXQiOjE2NTU1NTI1Njd9.0hD7wkRJMb-OJVseiQlLjCc5zIVwgx4XqK039lS2oEA',
+  refresh: ''
+};

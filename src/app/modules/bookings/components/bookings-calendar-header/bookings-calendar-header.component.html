@@ -1,0 +1,34 @@
+<div class="calendar-header-container">
+  <button
+    mat-flat-button
+    mwlCalendarPreviousView
+    color="primary"
+    [view]="view"
+    [(viewDate)]="viewDate"
+    (viewDateChange)="viewDateChange.next(viewDate)"
+  >
+    <-
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    mwlCalendarToday
+    [(viewDate)]="viewDate"
+    (viewDateChange)="viewDateChange.next(viewDate)"
+  >
+    Ajourd'hui
+  </button>
+  <button
+    mat-flat-button
+    mwlCalendarNextView
+    color="primary"
+    [view]="view"
+    [(viewDate)]="viewDate"
+    (viewDateChange)="viewDateChange.next(viewDate)"
+  >
+    ->
+  </button>
+  <h2 class="calendar-header-container__date">
+    {{ viewDate | calendarDate: view + 'ViewTitle':locale }}
+  </h2>
+</div>

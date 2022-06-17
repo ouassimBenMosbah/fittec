@@ -1,0 +1,22 @@
+<app-calendar-header
+  [(view)]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="onViewDateChange()"
+>
+</app-calendar-header>
+
+<ng-template #loading>
+  <div class="text-center">Récupération des réservations...</div>
+</ng-template>
+
+<div *ngIf="events$ | async; else loading; let events">
+  <mwl-calendar-week-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [weekStartsOn]="weekStartsOn"
+    [dayStartHour]="8"
+    [dayEndHour]="20"
+    (eventClicked)="onEventClicked($event)"
+  >
+  </mwl-calendar-week-view>
+</div>

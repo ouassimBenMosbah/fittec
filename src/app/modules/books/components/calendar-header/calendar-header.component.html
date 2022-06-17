@@ -1,0 +1,37 @@
+<div class="flex column center-vertically padding-left-sm">
+  <div class="margin-right-children">
+    <button
+      mat-flat-button
+      mwlCalendarPreviousView
+      color="primary"
+      [view]="view"
+      [(viewDate)]="viewDate"
+      (viewDateChange)="viewDateChange.next(viewDate)"
+    >
+      <-
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      mwlCalendarToday
+      [(viewDate)]="viewDate"
+      (viewDateChange)="viewDateChange.next(viewDate)"
+    >
+      Ajourd'hui
+    </button>
+    <button
+      mat-flat-button
+      mwlCalendarNextView
+      color="primary"
+      [view]="view"
+      [(viewDate)]="viewDate"
+      (viewDateChange)="viewDateChange.next(viewDate)"
+    >
+      ->
+    </button>
+  </div>
+  <h2 class="padding-left-md">
+    <!-- {{ viewDate | calendarDate: view + 'ViewTitle':locale }} -->
+  </h2>
+</div>
+<br />
