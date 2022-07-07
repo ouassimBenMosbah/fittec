@@ -98,7 +98,9 @@ export class CalendarContainerComponent implements OnInit {
       .fetchEventsForDisplayedDays(startOfWeek, numberDaysDisplayed)
       .pipe(
         map((scheduleDayEvent: ScheduleDayEvent[]) => {
-          return scheduleDayEvent.map((event) => this.formatToCalendar(event));
+          return (scheduleDayEvent ?? []).map((event) =>
+            this.formatToCalendar(event)
+          );
         })
       );
   }

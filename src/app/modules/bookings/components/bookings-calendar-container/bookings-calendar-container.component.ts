@@ -74,7 +74,9 @@ export class BookingsCalendarContainerComponent implements OnInit {
   > {
     return this.api.fetchUserBookings().pipe(
       map((bookings: WorkoutLesson[]) => {
-        return bookings.map((booking) => this.formatToCalendar(booking));
+        return (bookings ?? []).map((booking) =>
+          this.formatToCalendar(booking)
+        );
       })
     );
   }
