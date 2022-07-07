@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -10,7 +15,10 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 export class AuthenticationContainerComponent implements OnInit {
   public isLoggedIn!: boolean;
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   public ngOnInit(): void {
     this.setIsLoggedIn();
@@ -26,5 +34,6 @@ export class AuthenticationContainerComponent implements OnInit {
 
   private setIsLoggedIn() {
     this.isLoggedIn = this.authenticationService.isLoggedIn();
+    this.cdr.markForCheck();
   }
 }
