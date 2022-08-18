@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { exhaustMap, map, tap } from 'rxjs/operators';
 import {
   LoginData,
   LoginSuccessRequest
@@ -42,7 +42,12 @@ export class ApiService {
         terminal: 'WEB'
       })
       .pipe(
-        map(this.getDataFromSuccessfulRequest),
+        exhaustMap((res) => {
+          if (res.status !== 'success') {
+            return throwError(new Error(res.message ?? 'Erreur'));
+          }
+          return of(this.getDataFromSuccessfulRequest(res));
+        }),
         tap((data) => {
           this.authenticationService.setTokenInLocalStorage(data);
         })
@@ -73,19 +78,28 @@ export class ApiService {
   public bookLesson(params: {
     date: string;
     machine: string;
-  }): Observable<SuccessfulRequest<null>> {
-    return this.httpServer.post<SuccessfulRequest<null>>(
-      `${this.baseUrl}/user/booking`,
-      {
-        ...params,
-        map: 0
-      }
-      // {
-      //   date: '2022-07-30 13:30:00',
-      //   machine: '9db95873-c712-43b2-8cc8-7e1308bb682f',
-      //   map: 0
-      // }
-    );
+  }): Observable<{ status: string; data: unknown; message: string }> {
+    return this.httpServer
+      .post<{ status: string; data: unknown; message: string }>(
+        `${this.baseUrl}/user/booking`,
+        {
+          ...params,
+          map: 0
+        }
+        // {
+        //   date: '2022-07-30 13:30:00',
+        //   machine: '9db95873-c712-43b2-8cc8-7e1308bb682f',
+        //   map: 0
+        // }
+      )
+      .pipe(
+        exhaustMap((res) => {
+          if (res.status !== 'success') {
+            return throwError(new Error(res.message ?? 'Erreur'));
+          }
+          return of(res);
+        })
+      );
   }
 
   public deleteBooking(uid: string): Observable<SuccessfulRequest<null>> {

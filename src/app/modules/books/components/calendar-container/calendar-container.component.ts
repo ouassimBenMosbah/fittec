@@ -42,7 +42,11 @@ export class CalendarContainerComponent implements OnInit {
 
   public activeDayIsOpen: boolean = false;
 
-  public readonly numberDaysDisplayed = 7;
+  public readonly numberDaysDisplayed = 6;
+
+  public readonly excludeDays: number[] = [0]; // 0 = Sunday, 1 = Monday
+
+  private innerWidth?: number;
 
   constructor(
     private fetchScheduleDataHelperService: FetchScheduleDataHelperService,
@@ -80,13 +84,18 @@ export class CalendarContainerComponent implements OnInit {
           date: format(event.start, 'yyyy-MM-dd HH:mm:ss'),
           machine: event.id
         })
-        .subscribe(() => {
-          alert('La réservation a été effectué avec succès');
-          this.fetchEvents(
-            this.getStartOfWeek(this.viewDate),
-            this.numberDaysDisplayed
-          );
-        });
+        .subscribe(
+          (res) => {
+            alert('La réservation a été effectué avec succès');
+            this.fetchEvents(
+              this.getStartOfWeek(this.viewDate),
+              this.numberDaysDisplayed
+            );
+          },
+          (err) => {
+            alert(err);
+          }
+        );
     }
   }
 
@@ -98,6 +107,7 @@ export class CalendarContainerComponent implements OnInit {
       .fetchEventsForDisplayedDays(startOfWeek, numberDaysDisplayed)
       .pipe(
         map((scheduleDayEvent: ScheduleDayEvent[]) => {
+          this.innerWidth = window.innerWidth;
           return (scheduleDayEvent ?? []).map((event) =>
             this.formatToCalendar(event)
           );
@@ -123,9 +133,12 @@ export class CalendarContainerComponent implements OnInit {
     const available = event.max - event.booking;
     return {
       id: event.uid,
-      title: `${hour}:${minute} - ${available} disponibilité${
-        available > 1 ? 's' : ''
-      }`,
+      title:
+        innerWidth > 900
+          ? `${hour}:${minute} - ${available} disponibilité${
+              available > 1 ? 's' : ''
+            }`
+          : `${available} disp.`,
       start,
       end,
       meta: event,

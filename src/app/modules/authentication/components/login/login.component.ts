@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { first, tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError, first, tap } from 'rxjs/operators';
 import { ApiService } from 'src/app/api/api.service';
 
 @Component({
@@ -22,14 +23,32 @@ export class LoginComponent {
   constructor(private apiService: ApiService) {}
 
   public submit(): void {
+    const formattedPhoneNumber = this.getFormattedPhoneNumber(
+      this.form.get('phone')?.value
+    );
     this.apiService
-      .getToken(this.form.value)
+      .getToken({ ...this.form.value, phone: formattedPhoneNumber })
       .pipe(
         tap(() => {
           this.login.emit();
         }),
+        catchError((err) => {
+          alert(err);
+          return EMPTY;
+        }),
         first()
       )
       .subscribe();
+  }
+
+  private getFormattedPhoneNumber(phone?: string): string {
+    if (!phone) {
+      return '';
+    }
+    let formattedPhoneNumber = phone.replace(/\s/g, '');
+    if (formattedPhoneNumber.startsWith('06')) {
+      return formattedPhoneNumber.replace('06', '+336');
+    }
+    return formattedPhoneNumber;
   }
 }
