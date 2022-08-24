@@ -6,7 +6,17 @@
 </app-calendar-header>
 
 <ng-template #loading>
-  <div class="text-center">Récupération des réservations...</div>
+  <div class="loader-container">
+    <span [ngClass]="loaderClass"></span>
+  </div>
+  <mwl-calendar-month-view
+    [viewDate]="viewDate"
+    [events]="[]"
+    [activeDayIsOpen]="activeDayIsOpen"
+    [weekStartsOn]="weekStartsOn"
+    [excludeDays]="excludeDays"
+  >
+  </mwl-calendar-month-view>
 </ng-template>
 
 <div *ngIf="events$ | async; else loading; let events">

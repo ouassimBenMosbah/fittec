@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit
+  EventEmitter,
+  OnInit,
+  Output
 } from '@angular/core';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
@@ -13,6 +15,8 @@ import { AuthenticationService } from '../../services/authentication/authenticat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthenticationContainerComponent implements OnInit {
+  @Output() authChange: EventEmitter<boolean> = new EventEmitter();
+
   public isLoggedIn!: boolean;
 
   constructor(
@@ -34,6 +38,7 @@ export class AuthenticationContainerComponent implements OnInit {
 
   private setIsLoggedIn() {
     this.isLoggedIn = this.authenticationService.isLoggedIn();
+    this.authChange.emit(this.isLoggedIn);
     this.cdr.markForCheck();
   }
 }

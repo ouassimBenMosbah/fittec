@@ -1,12 +1,13 @@
-<form [formGroup]="form">
+<form [formGroup]="form" class="login-form">
   <mat-form-field>
     <mat-label>Téléphone</mat-label>
-    <input matInput formControlName="phone" type="text" />
+    <input matInput formControlName="phone" type="tel" />
   </mat-form-field>
   <mat-form-field>
     <mat-label>Mot de passe</mat-label>
     <input matInput formControlName="password" type="password" />
   </mat-form-field>
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
   <button
     mat-flat-button
     color="primary"

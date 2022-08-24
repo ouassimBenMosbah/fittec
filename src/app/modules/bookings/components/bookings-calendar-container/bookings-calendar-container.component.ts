@@ -7,8 +7,8 @@ import {
   DAYS_OF_WEEK
 } from 'angular-calendar';
 import { isSameDay, isSameMonth } from 'date-fns';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ApiService } from 'src/app/api/api.service';
 import { WorkoutLesson } from '../../../../@types/interfaces/workout-lesson.interface';
 import { CustomDateFormatter } from '../../../../providers/custom-date-formatter/custom-date-formatter.service';
@@ -42,6 +42,8 @@ export class BookingsCalendarContainerComponent implements OnInit {
   public activeDayIsOpen: boolean = false;
 
   public weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
+
+  public readonly excludeDays: number[] = [0]; // 0 = Sunday, 1 = Monday
 
   constructor(private api: ApiService) {}
 
@@ -77,6 +79,10 @@ export class BookingsCalendarContainerComponent implements OnInit {
         return (bookings ?? []).map((booking) =>
           this.formatToCalendar(booking)
         );
+      }),
+      catchError((err) => {
+        alert(err);
+        return EMPTY;
       })
     );
   }

@@ -1,21 +1,24 @@
-<mat-tab-group mat-align-tabs="center">
+<mat-tab-group
+  mat-align-tabs="center"
+  [selectedIndex]="selectedIndex"
+  (selectedIndexChange)="onSelectedIndexChange($event)"
+>
   <mat-tab label="Connexion">
     <app-authentication-container
-      style="padding-top: 16px; display: block"
+      style="display: block"
+      (authChange)="onAuthChange($event)"
     ></app-authentication-container>
   </mat-tab>
-  <mat-tab label="Mes réservations">
+  <mat-tab label="Mes réservations" [disabled]="!isLoggedIn">
     <ng-template matTabContent>
       <app-bookings-calendar-container
         style="padding-top: 16px; display: block"
       ></app-bookings-calendar-container>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Réserver">
+  <mat-tab label="Réserver" [disabled]="!isLoggedIn">
     <ng-template matTabContent>
-      <app-calendar-container
-        style="padding-top: 16px; display: block"
-      ></app-calendar-container>
+      <app-calendar-container style="display: block"></app-calendar-container>
     </ng-template>
   </mat-tab>
 </mat-tab-group>

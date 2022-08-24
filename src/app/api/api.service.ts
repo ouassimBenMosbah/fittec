@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { exhaustMap, map, tap } from 'rxjs/operators';
+import { exhaustMap, map, mergeMap, tap } from 'rxjs/operators';
 import {
   LoginData,
   LoginSuccessRequest
@@ -61,7 +61,14 @@ export class ApiService {
           Authorization: `Bearer ${this.authenticationService.token}`
         })
       })
-      .pipe(map(this.getDataFromSuccessfulRequest));
+      .pipe(
+        exhaustMap((res) => {
+          if (res.status !== 'success') {
+            return throwError(new Error(res.message ?? 'Erreur'));
+          }
+          return of(this.getDataFromSuccessfulRequest(res));
+        })
+      );
   }
 
   /**
@@ -72,7 +79,15 @@ export class ApiService {
       .get<SuccessfulScheduleDayRequest>(
         `${this.baseUrl}/public/booking/${date}`
       )
-      .pipe(map(this.getDataFromSuccessfulRequest), map(this.filterEMSLessons));
+      .pipe(
+        mergeMap((res) => {
+          if (res.status !== 'success') {
+            return throwError(new Error(res.message ?? 'Erreur'));
+          }
+          return of(this.getDataFromSuccessfulRequest(res));
+        }),
+        map(this.filterEMSLessons)
+      );
   }
 
   public bookLesson(params: {

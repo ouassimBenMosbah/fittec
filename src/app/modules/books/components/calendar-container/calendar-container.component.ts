@@ -7,8 +7,8 @@ import {
   DAYS_OF_WEEK
 } from 'angular-calendar';
 import { add, format, setHours, setMinutes, startOfWeek } from 'date-fns';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ScheduleDayEvent } from 'src/app/@types/interfaces/schedule-day.interface';
 import { ApiService } from 'src/app/api/api.service';
 import { CustomDateFormatter } from '../../../../providers/custom-date-formatter/custom-date-formatter.service';
@@ -46,7 +46,15 @@ export class CalendarContainerComponent implements OnInit {
 
   public readonly excludeDays: number[] = [0]; // 0 = Sunday, 1 = Monday
 
-  private innerWidth?: number;
+  public readonly loaderClassNames = [
+    'loader1',
+    'loader2',
+    'loader3',
+    'loader4',
+    'loader5'
+  ];
+
+  public loaderClass = this.computeRandomLoaderClass(this.loaderClassNames);
 
   constructor(
     private fetchScheduleDataHelperService: FetchScheduleDataHelperService,
@@ -61,6 +69,7 @@ export class CalendarContainerComponent implements OnInit {
   }
 
   public onViewDateChange(): void {
+    this.loaderClass = this.computeRandomLoaderClass(this.loaderClassNames);
     this.events$ = this.fetchEvents(
       this.getStartOfWeek(this.viewDate),
       this.numberDaysDisplayed
@@ -85,7 +94,7 @@ export class CalendarContainerComponent implements OnInit {
           machine: event.id
         })
         .subscribe(
-          (res) => {
+          () => {
             alert('La réservation a été effectué avec succès');
             this.fetchEvents(
               this.getStartOfWeek(this.viewDate),
@@ -107,12 +116,21 @@ export class CalendarContainerComponent implements OnInit {
       .fetchEventsForDisplayedDays(startOfWeek, numberDaysDisplayed)
       .pipe(
         map((scheduleDayEvent: ScheduleDayEvent[]) => {
-          this.innerWidth = window.innerWidth;
           return (scheduleDayEvent ?? []).map((event) =>
             this.formatToCalendar(event)
           );
+        }),
+        catchError((err) => {
+          alert(err);
+          return EMPTY;
         })
       );
+  }
+
+  private computeRandomLoaderClass(loaderClassNames: string[]): string {
+    return loaderClassNames[
+      Math.floor(Math.random() * loaderClassNames.length)
+    ];
   }
 
   private getStartOfWeek(viewDate: Date): Date {

@@ -3,9 +3,9 @@
 ></ng-container>
 
 <ng-template #loggedInTemplate>
-  <app-logout (logout)="onLogout()"></app-logout>
+  <app-logout class="content" (logout)="onLogout()"></app-logout>
 </ng-template>
 
 <ng-template #loggedOutTemplate>
-  <app-login (login)="onLogin()"></app-login>
+  <app-login class="content" (login)="onLogin()"></app-login>
 </ng-template>

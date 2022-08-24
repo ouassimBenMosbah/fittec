@@ -1,13 +1,20 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, first, tap } from 'rxjs/operators';
 import { ApiService } from 'src/app/api/api.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
   @Output() login = new EventEmitter<void>();
@@ -15,12 +22,14 @@ export class LoginComponent {
   public form: FormGroup = new FormGroup({
     phone: new FormControl<string>('', [
       Validators.required,
-      Validators.minLength(8)
+      Validators.minLength(10)
     ]),
     password: new FormControl<string>('', [Validators.required])
   });
 
-  constructor(private apiService: ApiService) {}
+  public errorMessage?: string;
+
+  constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {}
 
   public submit(): void {
     const formattedPhoneNumber = this.getFormattedPhoneNumber(
@@ -31,14 +40,17 @@ export class LoginComponent {
       .pipe(
         tap(() => {
           this.login.emit();
+          this.errorMessage = undefined;
         }),
         catchError((err) => {
-          alert(err);
-          return EMPTY;
+          this.errorMessage = err;
+          return of(undefined);
         }),
         first()
       )
-      .subscribe();
+      .subscribe(() => {
+        this.cdr.markForCheck();
+      });
   }
 
   private getFormattedPhoneNumber(phone?: string): string {
